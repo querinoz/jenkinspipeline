@@ -1,19 +1,15 @@
-# Base oficial do Jenkins LTS
-FROM jenkins/jenkins:lts
+# Usando Python 3.11 como base
+FROM python:3.11-slim
 
-# Mudar para root para poder instalar pacotes
-USER root
+# Diretório de trabalho
+WORKDIR /app
 
-# Atualizar e instalar dependências
-RUN apt-get update && \
-    apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-venv \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Copia o código do repositório para o container
+COPY . /app
 
-# Voltar para usuário jenkins (boa prática)
-USER jenkins
+# Instala dependências, se houver requirements.txt
+RUN pip install --upgrade pip
+RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+# Comando padrão (opcional)
+CMD ["python3", "websitecheck.py"]
