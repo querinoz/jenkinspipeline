@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-<<<<<<< HEAD
+        HEAD
         stage('Setup') {
             steps {
                 echo '🔧 Configurando ambiente...'
@@ -16,7 +16,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Executando testes...'
-=======
+
         stage('Checkout') {
             steps {
                 echo '📥 Obtendo código do repositório...'
@@ -46,29 +46,29 @@ pipeline {
                 sh 'docker run --rm jenkinspipeline-app echo "Rodando testes (ex: pytest)"'
                 // Exemplo real (se tiver pytest no container):
                 // sh 'docker run --rm jenkinspipeline-app pytest -v'
->>>>>>> 1fca130 (fix: removido checkout para test-pipeline.git)
+        1fca130 (fix: removido checkout para test-pipeline.git)
             }
         }
         stage('Run Application') {
             steps {
-<<<<<<< HEAD
+        HEAD
                 echo '🚀 Subindo aplicação...'
-=======
+
                 echo '🚀 Subindo aplicação no container...'
                 sh 'docker run -d --name app-container -p 5000:5000 jenkinspipeline-app'
->>>>>>> 1fca130 (fix: removido checkout para test-pipeline.git)
+        1fca130 (fix: removido checkout para test-pipeline.git)
             }
         }
     }
 
     post {
-<<<<<<< HEAD
-=======
+        HEAD
+
         always {
             echo "🧹 Limpando containers antigos..."
             sh 'docker rm -f app-container || true'
         }
->>>>>>> 1fca130 (fix: removido checkout para test-pipeline.git)
+        1fca130 (fix: removido checkout para test-pipeline.git)
         failure {
             echo "❌ Pipeline falhou!"
         }
