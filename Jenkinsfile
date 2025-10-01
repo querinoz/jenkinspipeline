@@ -46,7 +46,7 @@ pipeline {
                 sh 'docker run --rm jenkinspipeline-app echo "Rodando testes (ex: pytest)"'
                 // Exemplo real (se tiver pytest no container):
                 // sh 'docker run --rm jenkinspipeline-app pytest -v'
-        1fca130 (fix: removido checkout para test-pipeline.git)
+        
             }
         }
         stage('Run Application') {
@@ -56,7 +56,7 @@ pipeline {
 
                 echo '🚀 Subindo aplicação no container...'
                 sh 'docker run -d --name app-container -p 5000:5000 jenkinspipeline-app'
-        1fca130 (fix: removido checkout para test-pipeline.git)
+        
             }
         }
     }
@@ -68,7 +68,7 @@ pipeline {
             echo "🧹 Limpando containers antigos..."
             sh 'docker rm -f app-container || true'
         }
-        1fca130 (fix: removido checkout para test-pipeline.git)
+        
         failure {
             echo "❌ Pipeline falhou!"
         }
