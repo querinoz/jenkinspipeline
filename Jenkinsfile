@@ -6,42 +6,48 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                echo '📥 Obtendo código do repositório...'
-                checkout scm
+                echo "📥 Obtendo código do repositório..."
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/querinoz/jenkinspipeline.git',
+                        credentialsId: 'github-credential'
+                    ]]
+                ])
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo '🐳 Construindo imagem Docker com Python...'
-                sh '''
-                    docker build -t $IMAGE_NAME .
-                '''
+                echo "🐳 Construindo imagem Docker com Python e dependências..."
+                sh """
+                    docker build -t $IMAGE_NAME . 
+                """
             }
         }
 
         stage('Run WebsiteCheck') {
             steps {
-                echo '🧪 Executando websitecheck.py dentro do container...'
-                sh '''
+                echo "🧪 Executando websitecheck.py dentro do container..."
+                sh """
                     docker run --rm $IMAGE_NAME python3 websitecheck.py
-                '''
+                """
             }
         }
     }
 
     post {
         always {
-            echo '🧹 Limpando containers antigos...'
-            sh 'docker container prune -f || true'
-        }
-        failure {
-            echo '❌ Pipeline falhou!'
+            echo "🧹 Limpando containers antigos..."
+            sh 'docker container prune -f'
         }
         success {
-            echo '✅ Pipeline finalizado com sucesso!'
+            echo "✅ Pipeline finalizada com sucesso!"
+        }
+        failure {
+            echo "❌ Pipeline falhou!"
         }
     }
 }
