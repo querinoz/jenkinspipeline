@@ -1,22 +1,11 @@
 pipeline {
     agent any
 
-    stages {
-        HEAD
-        stage('Setup') {
-            steps {
-                echo '🔧 Configurando ambiente...'
-            }
-        }
-        stage('Lint') {
-            steps {
-                echo '🔍 Rodando lint...'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo '🧪 Executando testes...'
+    environment {
+        IMAGE_NAME = "jenkinspipeline-app"
+    }
 
+    stages {
         stage('Checkout') {
             steps {
                 echo '📥 Obtendo código do repositório...'
@@ -26,54 +15,33 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo '🐳 Construindo imagem Docker...'
-                sh 'docker build -t jenkinspipeline-app .'
+                echo '🐳 Construindo imagem Docker com Python...'
+                sh '''
+                    docker build -t $IMAGE_NAME .
+                '''
             }
         }
 
-        stage('Run Lint') {
+        stage('Run WebsiteCheck') {
             steps {
-                echo '🔍 Rodando lint no container...'
-                sh 'docker run --rm jenkinspipeline-app echo "Executando lint (ex: flake8, eslint...)"'
-                // Exemplo real (se tiver flake8 instalado no container):
-                // sh 'docker run --rm jenkinspipeline-app flake8 .'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                echo '🧪 Executando testes no container...'
-                sh 'docker run --rm jenkinspipeline-app echo "Rodando testes (ex: pytest)"'
-                // Exemplo real (se tiver pytest no container):
-                // sh 'docker run --rm jenkinspipeline-app pytest -v'
-        
-            }
-        }
-        stage('Run Application') {
-            steps {
-        HEAD
-                echo '🚀 Subindo aplicação...'
-
-                echo '🚀 Subindo aplicação no container...'
-                sh 'docker run -d --name app-container -p 5000:5000 jenkinspipeline-app'
-        
+                echo '🧪 Executando websitecheck.py dentro do container...'
+                sh '''
+                    docker run --rm $IMAGE_NAME python3 websitecheck.py
+                '''
             }
         }
     }
 
     post {
-        HEAD
-
         always {
-            echo "🧹 Limpando containers antigos..."
-            sh 'docker rm -f app-container || true'
+            echo '🧹 Limpando containers antigos...'
+            sh 'docker container prune -f || true'
         }
-        
         failure {
-            echo "❌ Pipeline falhou!"
+            echo '❌ Pipeline falhou!'
         }
         success {
-            echo "✅ Pipeline finalizado com sucesso!"
+            echo '✅ Pipeline finalizado com sucesso!'
         }
     }
 }
