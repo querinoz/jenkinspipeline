@@ -12,7 +12,7 @@ pipeline {
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/querinoz/website-check-pipeline',
+                        url: 'https://github.com/querinoz/website-check-pipeline.git',
                         credentialsId: 'github-credential'
                     ]]
                 ])
