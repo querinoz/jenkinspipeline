@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "jenkinspipeline-app"
+        IMAGE_NAME = "website-check-pipeline-app"
     }
 
     stages {
