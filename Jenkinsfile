@@ -5,15 +5,10 @@ pipeline {
 
     // Configuração do agendamento (Trigger) usando CRON.
     // O Jenkins CRON só suporta minutos, horas, dias, etc. Ele não suporta segundos.
-    // Para simular a execução "a cada 20 segundos", a melhor prática é usar o agendamento
-    // padrão para rodar a cada minuto, o que é o intervalo mínimo recomendado para pipelines.
-    //
     // H/5 * * * * = Executa a cada 5 minutos (evita sobrecarga no Jenkins)
     // Se você realmente quer a cada minuto, use H * * * *
     triggers {
-        // CRON para executar a cada minuto (o mínimo suportado)
-        // Se você não definir a zona de tempo, ele usará a do servidor Jenkins.
-        cron 'H * * * *'
+        cron '* * * * *'
     }
 
     environment {
