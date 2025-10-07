@@ -8,7 +8,7 @@ pipeline {
     // H/5 * * * * = Executa a cada 5 minutos (evita sobrecarga no Jenkins)
     // Se você realmente quer a cada minuto, use H * * * *
     triggers {
-        cron '1 * * * *'
+        cron '* * * * *'
     }
 
     environment {
